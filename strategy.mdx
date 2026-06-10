@@ -1,0 +1,101 @@
+---
+title: "Strategy & Thesis"
+description: "Current thesis, the moat, Assumption A, what is settled and killed, and the three failure modes."
+---
+
+This page is the current state of the CH thesis as of D28 (2026-06-10). The canonical append-only log is at `docs/scoping/THESIS-LOG.md` in the engine repo. Consult it before proposing any pivot to avoid re-litigating closed branches.
+
+---
+
+## Current thesis
+
+Cliff Horizon is the **underwriting brain of an OTC parametric weather-derivatives marketplace**:
+
+- **Index layer:** Certified, auditable, simple weather index. Not a differentiator — by design.
+- **Calibration layer:** QDM forward-climate pricing on ERA5 + CMIP6. Necessary but not the moat.
+- **Structuring layer:** Two product forms (derivative + warranty) that match the legal and regulatory context of each geography.
+- **Capital layer:** Ensuro as the dedicated capital wrapper. CH is non-principal.
+
+The marketplace serves the **"missing middle"** — commercial operators too large to self-insure but too small, too illiquid, or in geographies where the standard insurance market does not serve them.
+
+---
+
+## The moat
+
+| Layer | Why it matters |
+|---|---|
+| **Forward-climate pricing** | History-based pricing is insolvent on trending perils. Forward pricing is the only defensible method for 5–10 year contracts with CC signal. Most incumbents do not do this. |
+| **Breadth** | Each new uncorrelated peril/geography improves capital's book efficiency → lower cost of capital → cheaper cover → more buyers. Breadth compounds. |
+| **Network** | Buyer relationships + capital relationships. Neither side builds the origination and index infrastructure to talk directly. CH is the trusted intermediary. |
+
+**What is not the moat:** data access, the index formula, forecasting skill, calibration accuracy.
+
+---
+
+## Assumption A — the gate
+
+> **Mid-market commercial buyers will pay for OTC parametric cover and accept basis risk.**
+
+This is the single most important open question. Until it is validated with signed term sheets, everything else is a model.
+
+The cheapest test: 3–5 buyer conversations at Turkey prospect locations using the demo funnel. Turkey has year-round rain risk, real recent events, and no national gauge — the two-source ERA5+NASA settlement is transparent and defensible.
+
+---
+
+## What is settled
+
+These questions are closed. Do not re-open them.
+
+| Question | Answer | Evidence |
+|---|---|---|
+| Does CH have a forecasting edge on public data? | No | PIT histogram, OOS CRPS barely above climatology |
+| Is solar the right launch wedge? | No — killed D20 | CV 2–6%, InRisk overlap, financeability not variance |
+| Is trigger level a differentiator? | No — it is a price dial | D26 analysis; any level can be struck |
+| Is history-based pricing sufficient? | No — insolvent on trending perils | CC 7%/°C tail intensification; forward calibration required |
+| Is calibration the moat? | No — necessary but not sufficient | QDM improvement is real but small; data is public |
+
+---
+
+## What is killed
+
+These directions were formally closed. A new *axis* on a killed thing can still be valid; re-running the same axis is churn.
+
+| Killed | Reason | Log entry |
+|---|---|---|
+| Weather portfolio trading | No edge on public data | D8 |
+| Solar as launch wedge | Too stable; InRisk overlap | D20, re-confirmed D25 |
+| India solar/DSM as first wedge | Solar killed; DSM forecasting not paid | D20 |
+| Competing as parametric insurer | Requires IRDAI/FCA licence | D22 |
+| Forecast-archive corpus pull | Calibrates skill we don't sell, at wrong timescale | D18 |
+
+---
+
+## Three failure modes to watch
+
+### 1. Parametric insurer drift
+
+**Signal:** CH starts making underwriting decisions (which risks to take, at what price, with its own capital at stake).
+
+**Guard:** CH is a non-principal index and calculation agent. All risk stays on Ensuro's balance sheet under MSA §8.10. Neutrality is the moat — the moment CH becomes a counterparty, it loses the trusted-intermediary position.
+
+### 2. Data-vendor drift
+
+**Signal:** CH starts competing on data quality or data access rather than on calibration + structuring + breadth.
+
+**Guard:** ERA5, NASA POWER, and GPM IMERG are free and public. Any competitor can replicate the data layer. If CH is selling "better data", it has lost the plot. The product is the pricing brain and the structuring + network around it.
+
+### 3. Funnel-polish overinvestment
+
+**Signal:** More engineering time on the dashboard demo than on buyer conversations.
+
+**Guard:** The demo exists to test Assumption A, not to be a product. If Assumption A fails, the demo is worthless regardless of how good it looks. Buyer conversations come first; dashboard polish comes after the first signed term sheet.
+
+---
+
+## The risk-reference doctrine
+
+CH surfaces and explains uncertainty — it does not engineer it away. The basis is disclosed in money. The predictive cone is shown. The reliability diagram is public. The uncertainty is the product: a buyer who understands the basis and still buys is a durable counterparty. A buyer who buys without understanding the basis is a churn risk.
+
+Triggers are set on an economic basis — where the buyer's downtime cost is real, not where the statistics look best. Relocating a trigger to a gridpoint that flattens the basis is a violation of this doctrine.
+
+CH is a market **enabler**, not a market maker. It does not take principal risk. It does not favour either side of the trade. This neutrality is what makes it a credible index agent for both buyers and capital.
