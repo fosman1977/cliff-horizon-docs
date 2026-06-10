@@ -1,0 +1,96 @@
+---
+title: "Dubai / Gulf"
+description: "Flood derivative economics. Apr-2024 event context, GEV tail, two-source basis, indicative deal structure."
+---
+
+Dubai and the broader Gulf is the primary target geography for the **flood derivative** product. The April 2024 extreme rainfall event crystallised the case: a disruptive flood event that affected hundreds of commercial operators, with no parametric product available to any of them.
+
+---
+
+## The April 2024 event
+
+On 16 April 2024, an extreme rainfall event hit Dubai and the UAE:
+
+- NASA POWER recorded approximately **53mm** at the Dubai gridpoint
+- ERA5 / Open-Meteo recorded approximately **100mm** at the same point
+- Station observations reported even higher values in some areas
+- The event caused widespread operational shutdown across Dubai Airport (capacity reduced), free zones, construction sites, logistics operations, and retail
+
+For context, Dubai's historical 1-in-100-year return level (ERA5 fit, pre-CC loading) is in the 100–150mm range. The April 2024 event was either a 1-in-45 or 1-in-130 event depending on which data source you use. Both estimates are disclosed to buyers as part of the basis discussion.
+
+---
+
+## GEV tail calibration
+
+| Metric | Value |
+|---|---|
+| Distribution fit | GEV with L-moments |
+| Shape parameter k | −0.2 to −0.3 |
+| Calibration period | ERA5 1979–2023 |
+| CC forward loading | ~7%/°C (Clausius-Clapeyron) |
+
+Key return period estimates (pre-CC loading, ERA5):
+
+| Event level | Return period |
+|---|---|
+| >25mm/24h (disruptive) | ~1-in-2 to 1-in-9 years |
+| >50mm/24h (severe) | ~1-in-13 to 1-in-34 years |
+| Apr 2024 (~100mm) | ~1-in-45 to 1-in-130 years |
+
+**Independent validation:** Guy Carpenter / JBA EVA places Dubai City 1-in-125 at the 7-day 168mm level. CH's 1-in-132 for single-day severe events is directionally consistent with this benchmark.
+
+---
+
+## Two-source basis (disclosed)
+
+| Source | Apr-2024 reading | Notes |
+|---|---|---|
+| NASA POWER | ~53mm | GPM-family satellite+reanalysis |
+| ERA5 / Open-Meteo | ~100mm | ECMWF reanalysis |
+| Gap | 47mm | Buyer's acknowledged basis risk |
+
+The 47mm gap is material. CH discloses this in every Dubai quote. The settlement source is specified in the contract — typically ERA5 as the primary source with NASA as the disclosed cross-check. A buyer who wants to use NASA POWER as settlement gets a different premium because the trigger frequency changes.
+
+<Note>
+Reanalysis is a floor. Station observations and radar consistently show higher intensities in extreme events. CH treats the reanalysis gap as a conservative bias — actual events are likely worse than the index records.
+</Note>
+
+---
+
+## Indicative deal structure (free-zone operator)
+
+The reference case for Dubai is a free-zone commercial operator (logistics, data centre, or light industrial) with measurable downtime costs per day of flood disruption.
+
+| Parameter | Value |
+|---|---|
+| Burn per day | AED 3,000,000 |
+| Cap | 30 days |
+| Maximum payout | AED 90,000,000 |
+| Sweet spot flood-line | 50mm (1-in-13 to 1-in-34) |
+| Indicative premium | AED 5.9–7.6m |
+| Rate on line (RoL) | 7–8% |
+
+The 50–70mm flood-line range is the sweet spot: frequent enough to be credible to the buyer, rare enough for capital to price below the buyer's pain threshold.
+
+At a 25mm flood-line, the product is closer to business interruption insurance (too frequent, too cheap for capital). At 100mm, it is a catastrophe layer with very low trigger probability.
+
+---
+
+## Assumption A — still to validate
+
+Dubai is the primary commercial case for Assumption A. The economics are clear. The question is whether free-zone operators, their procurement officers, and their treasury teams will:
+
+1. Understand basis risk and accept it
+2. Approve parametric cover without proof of loss
+3. Get counterparty approval for Ensuro
+
+All three are open. The Turkey funnel is the cheaper test (more buyer candidates, lower deal size, less procurement friction). Dubai is the larger opportunity that follows if Turkey proves the thesis.
+
+---
+
+## Forms available
+
+| Form | Status |
+|---|---|
+| Flood derivative | Live (indicative) |
+| Warranty | Not applicable (single-event flood, not forecast-accumulation) |
