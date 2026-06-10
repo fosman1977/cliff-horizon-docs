@@ -1,0 +1,147 @@
+---
+title: "Quote — Rain / Work-Stop"
+description: "POST /api/quote — full QuoteRequest and QuoteResult schemas with examples."
+---
+
+The `/api/quote` endpoint is the primary rain/work-stop pricing endpoint. It accepts a structured quote request and returns a full premium estimate with uncertainty bands, basis disclosure, and provenance metadata.
+
+---
+
+## POST /api/quote
+
+```
+POST http://localhost:8001/api/quote
+Content-Type: application/json
+```
+
+---
+
+## QuoteRequest schema
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `site` | string | Yes | — | Site ID from `/api/sites` |
+| `strikeDays` | integer | Yes | — | Days above threshold before payout begins |
+| `capDays` | integer | Yes | — | Maximum days counted for payout |
+| `burnPerDay` | number | Yes | — | Operator's cost per day of work-stop (local currency) |
+| `load` | number | No | 0.35 | Capital load above expected loss (0.35 = 35%) |
+| `threshold` | number | No | site default | Rain threshold in mm/day. Overrides site default |
+
+---
+
+## QuoteResult schema
+
+| Field | Type | Description |
+|---|---|---|
+| `premium` | number | Point estimate premium (local currency) |
+| `premium_band` | [number, number] | 90% credible interval for premium |
+| `expected_days` | number | Expected trigger days in the contract period |
+| `expected_days_band` | [number, number] | 90% credible interval for expected days |
+| `basis` | object | Basis disclosure (see below) |
+| `settlement_spec` | object | Settlement source, method, and parameters |
+| `provenance` | object | Hash, method, and generation timestamp |
+
+### basis object
+
+```json
+{
+  "factor": 0.87,
+  "ci": [0.71, 1.04],
+  "source_pair": ["ERA5", "NASA POWER"]
+}
+```
+
+- `factor`: ratio of cross-check source to primary source (1.0 = perfect agreement)
+- `ci`: 90% confidence interval for the basis factor
+- `source_pair`: [primary, cross-check]
+
+### settlement_spec object
+
+```json
+{
+  "source": "ERA5",
+  "method": "daily_precip_mm",
+  "threshold": 10,
+  "period": "contract_period"
+}
+```
+
+### provenance object
+
+```json
+{
+  "hash": "sha256:a3f9...",
+  "method": "QDM_v2",
+  "generated": "2026-06-10T09:00:00Z"
+}
+```
+
+---
+
+## Example request
+
+```bash
+curl -X POST http://localhost:8001/api/quote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site": "rize_tr",
+    "strikeDays": 10,
+    "capDays": 30,
+    "burnPerDay": 50000,
+    "load": 0.35,
+    "threshold": 10
+  }'
+```
+
+---
+
+## Example response
+
+```json
+{
+  "premium": 412500,
+  "premium_band": [318000, 521000],
+  "expected_days": 6.1,
+  "expected_days_band": [4.7, 7.7],
+  "basis": {
+    "factor": 0.92,
+    "ci": [0.78, 1.07],
+    "source_pair": ["ERA5", "NASA POWER"]
+  },
+  "settlement_spec": {
+    "source": "ERA5",
+    "method": "daily_precip_mm",
+    "threshold": 10,
+    "period": "contract_period"
+  },
+  "provenance": {
+    "hash": "sha256:a3f9c1...",
+    "method": "QDM_v2",
+    "generated": "2026-06-10T09:00:00Z"
+  }
+}
+```
+
+---
+
+## Sensitivity curve
+
+To explore how the premium changes with strike level:
+
+```bash
+GET http://localhost:8001/api/sensitivity/rize_tr
+```
+
+Returns a curve of `(strikeDays, premium)` pairs at fixed cap and burnPerDay, useful for finding the cost-efficient attachment point.
+
+---
+
+## QC eligibility
+
+Before quoting, check whether the site passes the do-not-quote sweep:
+
+```bash
+GET http://localhost:8001/api/qc/rize_tr
+```
+
+Returns flags for: data gaps, wide basis (>30% gap between sources), insufficient calibration history, and any site-specific override flags.
