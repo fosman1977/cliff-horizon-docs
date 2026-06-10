@@ -1,0 +1,120 @@
+---
+title: "Wind Quote"
+description: "POST /api/wind/quote — Weibull wind index, log-law height adjustment, derivative and warranty forms."
+---
+
+The wind quote endpoint prices both derivative and warranty forms for the wind peril. The key parameter is `height` — the hub height at which the contract is assessed — which drives the log-law adjustment from the 10m reference height in ERA5/NASA data.
+
+---
+
+## POST /api/wind/quote
+
+```
+POST http://localhost:8001/api/wind/quote
+Content-Type: application/json
+```
+
+---
+
+## Request schema
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `site` | string | Yes | — | Site ID (must be a wind-enabled site) |
+| `strikeDays` | integer | Yes | — | Days above threshold before payout begins |
+| `capDays` | integer | Yes | — | Maximum trigger days for payout |
+| `burnPerDay` | number | Yes | — | Operator cost per day of wind downtime |
+| `threshold` | number | Yes | — | Wind speed threshold in m/s |
+| `height` | number | No | `10` | Hub/assessment height in metres |
+| `form` | string | No | `"derivative"` | `"derivative"` or `"warranty"` |
+| `load` | number | No | `0.35` | Capital load above expected loss |
+
+---
+
+## Height adjustment (log-law)
+
+Wind speed is adjusted from 10m reference height to the requested height using:
+
+```
+v(h) = v(h_ref) × ln(h / z0) / ln(h_ref / z0)
+```
+
+Where `z0` is the site-specific surface roughness length. The `gev_params` (actually Weibull params for wind) in the response reflect the distribution at the requested height.
+
+---
+
+## Response schema
+
+| Field | Type | Description |
+|---|---|---|
+| `premium` | number | Point estimate premium |
+| `premium_band` | [number, number] | 90% credible interval |
+| `expected_days` | number | Expected trigger days per contract period |
+| `weibull_params` | object | Fitted Weibull parameters at assessment height |
+| `height_used` | number | Effective height after log-law adjustment (metres) |
+| `form` | string | Confirms `"derivative"` or `"warranty"` |
+| `basis` | object | ERA5 vs NASA basis |
+| `provenance` | object | Hash, method, generated |
+
+### weibull_params object
+
+```json
+{
+  "k": 2.1,
+  "lambda": 8.4,
+  "height": 80,
+  "method": "MLE"
+}
+```
+
+---
+
+## Example: Dubai crane operations (50m height)
+
+```bash
+curl -X POST http://localhost:8001/api/wind/quote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site": "dubai_ae",
+    "strikeDays": 5,
+    "capDays": 20,
+    "burnPerDay": 150000,
+    "threshold": 20,
+    "height": 50,
+    "form": "derivative",
+    "load": 0.35
+  }'
+```
+
+---
+
+## Example: India wind-farm warranty (100m turbine hub)
+
+```bash
+curl -X POST http://localhost:8001/api/wind/quote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site": "coimbatore_in",
+    "strikeDays": 0,
+    "capDays": 30,
+    "burnPerDay": 200000,
+    "threshold": 12,
+    "height": 100,
+    "form": "warranty",
+    "load": 0.35
+  }'
+```
+
+<Note>
+For India sites, only `"form": "warranty"` is valid. Passing `"derivative"` for an India site will return a 422 validation error with an IRDAI note.
+</Note>
+
+---
+
+## Wind-enabled sites
+
+Current wind-configured sites:
+- `dubai_ae` — Shamal (Gulf)
+- `istanbul_tr` — Lodos/Meltemi (Turkey, Marmara)
+- `antalya_tr` — Meltemi (Turkey, Mediterranean)
+- `coimbatore_in` — Wind-farm (India, Tamil Nadu, warranty only)
