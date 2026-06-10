@@ -1,0 +1,111 @@
+---
+title: "API Overview"
+description: "Base URL, content type, all endpoints grouped by router."
+---
+
+The Cliff Horizon engine exposes a FastAPI service on port **8001**. There is no authentication for local development. All endpoints return JSON.
+
+---
+
+## Base URL
+
+```
+http://localhost:8001
+```
+
+For remote/SSH dev box access, substitute the LAN or Tailscale address:
+- LAN: `http://192.168.0.44:8001`
+- Tailscale: `http://100.90.92.110:8001`
+
+---
+
+## Content type
+
+All `POST` requests require `Content-Type: application/json`. All responses are `application/json`.
+
+---
+
+## Endpoints
+
+### Sites and index
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/sites` | List all configured sites with peril and location metadata |
+| `GET` | `/api/index/{site_id}` | Daily index values for a site. `?threshold=mm` recomputes from raw data |
+
+### Rain / work-stop quote
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/quote` | Rain/work-stop quote → QuoteResult |
+| `GET` | `/api/settlement/{site_id}` | Settlement specification for the site |
+| `GET` | `/api/qc[/{site_id}]` | Do-not-quote eligibility sweep (basis, data gap, QC flags) |
+| `GET` | `/api/sensitivity/{site_id}` | Trigger-depth sensitivity curve (premium vs strikeDays) |
+
+### Calibration proof
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/proof/{site_id}` | Reliability diagram + ECE + Brier decomposition |
+| `GET` | `/api/track/{site_id}` | Rolling predicted-vs-observed audit, append-only ledger |
+
+### Flood
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/flood/quote` | Flood derivative quote (GEV precip → downtime payout) |
+
+### Wind
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/wind/quote` | Wind peril quote (Weibull, log-law height adjustment) |
+
+### Solar
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/irradiance/quote` | Solar irradiance menu-line quote |
+
+### Warranty
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/warranty/` | Forecast-accuracy warranty (Ashoka form, SC formula) |
+
+### Natural language
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/ask` | NL query → structured risk exposure (Ask tab) |
+
+---
+
+## OpenAPI / Swagger UI
+
+The full auto-generated API documentation is available at:
+
+```
+http://localhost:8001/docs
+```
+
+ReDoc alternative:
+
+```
+http://localhost:8001/redoc
+```
+
+---
+
+## Error format
+
+All errors return standard HTTP status codes with a JSON body:
+
+```json
+{
+  "detail": "Site 'unknown_site' not found in configuration"
+}
+```
+
+Common status codes: `400` (bad request / invalid parameters), `404` (site not found), `422` (validation error — check request schema), `500` (engine error).
