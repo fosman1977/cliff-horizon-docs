@@ -1,12 +1,12 @@
 {
   "$schema": "https://jamdesk.com/docs.json",
-  "name": "Documentation",
-  "description": "Your documentation site powered by Jamdesk",
+  "name": "Cliff Horizon",
+  "description": "OTC parametric weather-derivatives engine — forward-climate pricing + structuring",
   "theme": "jam",
   "colors": {
-    "primary": "#6366F1",
-    "light": "#818CF8",
-    "dark": "#4F46E5"
+    "primary": "#0ea5e9",
+    "light": "#38bdf8",
+    "dark": "#0369a1"
   },
   "navbar": {
     "primary": {
@@ -18,38 +18,50 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Docs",
+        "tab": "Overview",
         "icon": "book-open",
         "groups": [
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "quickstart"
-            ]
+            "group": "Getting Started",
+            "pages": ["introduction", "quickstart"]
           },
           {
-            "group": "Writing Content",
-            "pages": [
-              "writing/pages",
-              "writing/components",
-              "writing/code-blocks"
-            ]
+            "group": "Product",
+            "pages": ["product-forms", "marketplace-economics"]
           }
         ]
       },
       {
-        "tab": "Components",
-        "icon": "puzzle-piece",
+        "tab": "Perils & Geographies",
+        "icon": "cloud-rain",
         "groups": [
           {
-            "group": "Components",
-            "pages": [
-              "components/cards",
-              "components/callouts",
-              "components/tabs-and-accordions",
-              "components/steps"
-            ]
+            "group": "Perils",
+            "pages": ["perils/rain", "perils/flood", "perils/wind", "perils/solar"]
+          },
+          {
+            "group": "Geographies",
+            "pages": ["geographies/turkey", "geographies/dubai", "geographies/india"]
+          }
+        ]
+      },
+      {
+        "tab": "API",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Reference",
+            "pages": ["api/overview", "api/quote", "api/flood", "api/wind", "api/proof-track"]
+          }
+        ]
+      },
+      {
+        "tab": "Strategy",
+        "icon": "chart-line",
+        "groups": [
+          {
+            "group": "Thesis",
+            "pages": ["calibration", "strategy"]
           }
         ]
       }
