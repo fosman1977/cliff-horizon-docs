@@ -1,75 +1,111 @@
 ---
-title: Quickstart
-description: "Edit MDX files, add new pages to your navigation, customize colors and branding in docs.json, and preview locally with the Jamdesk CLI."
+title: "Quickstart"
+description: "Run the Cliff Horizon engine and dashboard locally in under 5 minutes."
 ---
 
-Your docs are built from MDX files in this repository. Every push to GitHub triggers an automatic build and deploy.
+## Prerequisites
 
-## Edit a page
+- Python 3.10+ with `venv`
+- Node.js 18+ and npm
+- `uvicorn` will be installed via requirements
 
-Open any `.mdx` file and start writing. MDX supports standard Markdown plus Jamdesk components.
-
-```mdx
----
-title: My Page
-description: A brief description for SEO
 ---
 
-# Heading
-
-Regular markdown works — **bold**, *italic*, `code`, [links](https://example.com).
-```
-
-## Add a new page
-
-<Steps>
-  <Step title="Create an MDX file">
-    Add a new `.mdx` file anywhere in your project, for example `guides/deployment.mdx`.
-  </Step>
-  <Step title="Add it to navigation">
-    Open `docs.json` and add the page path to the `navigation` section:
-
-    ```json
-    {
-      "group": "Guides",
-      "pages": ["guides/deployment"]
-    }
-    ```
-  </Step>
-  <Step title="Push to GitHub">
-    Commit and push. Your site will rebuild automatically.
-  </Step>
-</Steps>
-
-## Customize your site
-
-Everything is configured in `docs.json`:
-
-| Setting | What it does |
-|---------|-------------|
-| `name` | Site name shown in the header |
-| `colors` | Primary, light, and dark accent colors |
-| `logo` | Light and dark mode logo images |
-| `theme` | Visual theme (`jam`, `nebula`, or `pulsar`) |
-| `navigation` | Sidebar tabs, groups, and page order |
-| `navbar` | Top navigation links and buttons |
-
-<Tip>
-See the full configuration reference at [jamdesk.com/docs](https://jamdesk.com/docs).
-</Tip>
-
-## Use the CLI
-
-Install the Jamdesk CLI for local development:
+## 1. Engine setup
 
 ```bash
-npm install -g jamdesk
+# Clone and enter the repo
+git clone https://github.com/fosman1977/cliff-horizon-engine.git
+cd cliff-horizon-engine
+
+# Create and activate venv
+python3 -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the engine on port 8001
+uvicorn engine.app.main:app --reload --port 8001
 ```
 
-Preview your docs locally:
+The engine is now running at `http://localhost:8001`. Visit `http://localhost:8001/docs` for the auto-generated OpenAPI UI.
+
+---
+
+## 2. Dashboard setup
+
+The active dashboard is `dashboard-v2/` (not the legacy `dashboard/`).
 
 ```bash
-jamdesk dev
+cd dashboard-v2
+npm install
+npm run dev
+# → http://localhost:5173
 ```
 
-This starts a local server with hot reload so you can see changes instantly.
+---
+
+## 3. First API call
+
+Verify the engine is running by listing configured sites:
+
+```bash
+curl http://localhost:8001/api/sites
+```
+
+Example response:
+
+```json
+[
+  { "id": "rize_tr", "name": "Rize, Turkey", "peril": "rain", "lat": 41.02, "lon": 40.52 },
+  { "id": "istanbul_tr", "name": "İstanbul, Turkey", "peril": "flood", "lat": 41.01, "lon": 28.97 },
+  { "id": "dubai_ae", "name": "Dubai, UAE", "peril": "flood", "lat": 25.20, "lon": 55.27 },
+  { "id": "bankot_in", "name": "Bankot Creek, India", "peril": "rain", "lat": 17.94, "lon": 73.27 }
+]
+```
+
+Get a rain/work-stop quote:
+
+```bash
+curl -X POST http://localhost:8001/api/quote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site": "rize_tr",
+    "strikeDays": 10,
+    "capDays": 30,
+    "burnPerDay": 5000,
+    "load": 0.35,
+    "threshold": 10
+  }'
+```
+
+---
+
+## 4. Remote / SSH dev box
+
+If the engine runs on a remote machine (Studio dev box), start it with `--host` so it binds to all interfaces:
+
+```bash
+uvicorn engine.app.main:app --reload --port 8001 --host 0.0.0.0
+# Dashboard:
+cd dashboard-v2 && npm run dev -- --host
+```
+
+Then access via:
+- **LAN:** `http://192.168.0.44:5173` / `http://192.168.0.44:8001`
+- **Tailscale:** `http://100.90.92.110:5173` / `http://100.90.92.110:8001`
+
+<Note>
+`localhost` URLs only work inside the SSH session itself. Always use the LAN or Tailscale address when sharing the demo with someone else.
+</Note>
+
+---
+
+## 5. Verify calibration proof
+
+```bash
+curl http://localhost:8001/api/proof/rize_tr
+```
+
+Returns a reliability diagram, ECE, and Brier decomposition for the site. See [Proof & Track](/api/proof-track) for how to interpret the output.
