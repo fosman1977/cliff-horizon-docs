@@ -1,0 +1,102 @@
+---
+title: "Wind"
+description: "Wind peril — Gulf Shamal, Turkey Lodos/Meltemi, India wind-farm. Log-law height adjustment."
+---
+
+The wind peril covers commercial operators against sustained or gusting wind events that halt or degrade operations. Three regional wind systems are modelled: the Gulf **Shamal**, Turkey's **Lodos and Meltemi**, and wind-farm operations in India (**Coimbatore**).
+
+---
+
+## Wind index
+
+The wind index is a **Weibull-fitted parametric index** on daily maximum sustained wind speed at the relevant hub height. The Weibull distribution is the standard choice for wind speed because it correctly represents the shape of the right tail (shape parameter k typically 1.5–2.5 for the sites modelled).
+
+```
+WindIndex = count(days where wind_speed_at_height ≥ threshold m/s)
+```
+
+The threshold is a contract dial (default varies by peril type — see below).
+
+---
+
+## Height adjustment (log-law)
+
+ERA5 and NASA POWER provide wind speed at 10m reference height. Contract heights differ:
+
+| Use case | Typical height |
+|---|---|
+| Construction crane operations | 50–100m |
+| Wind turbine hub | 80–120m |
+| General operations | 10m (ERA5 native) |
+
+CH applies the **logarithmic wind profile (log-law)**:
+
+```
+v(h) = v(h_ref) × ln(h / z0) / ln(h_ref / z0)
+```
+
+Where `z0` is the surface roughness length (site-specific). This is exposed as the `height` parameter in the `/api/wind/quote` endpoint. The height slider in WindView adjusts this in real time.
+
+---
+
+## Regional wind systems
+
+### Gulf — Shamal
+
+The Shamal is a northwesterly wind system affecting the entire Gulf. Sustained Shamal events (>25 m/s at crane height) can halt construction on major projects for days. The Dubai/Abu Dhabi construction sector is the primary buyer target.
+
+- Settlement: ERA5 10m + log-law adjustment
+- Form: Derivative + warranty
+- Typical threshold: 15–25 m/s at hub height
+
+### Turkey — Lodos and Meltemi
+
+Two distinct systems affect Turkey prospects:
+
+**Lodos** — a warm southwesterly that affects İstanbul, the Aegean, and Marmara coasts. Relevant for coastal construction and marine operations.
+
+**Meltemi** — a summer northerly that affects the Aegean and Eastern Mediterranean. Relevant for solar installation work and offshore operations.
+
+- Settlement: ERA5 + NASA POWER cross-check
+- Form: Derivative + warranty
+- Sites: overlaps with rain/flood Turkey prospect locations
+
+### India — Coimbatore wind-farm
+
+Coimbatore is in the wind-rich corridor of Tamil Nadu. The use case is wind turbine downtime from wind speeds outside the operating range (either too high — shutdown threshold — or seasonal variation from forecast).
+
+- Settlement: ERA5 + log-law to hub height (80–120m typical)
+- Form: **Warranty only** (IRDAI carve-out for derivative in India)
+- Note: Ensuro holds the risk in both wrapper forms per MSA §8.10
+
+---
+
+## Product forms
+
+Both **derivative** and **warranty** forms are available for wind, with the India exception:
+
+| Geography | Derivative | Warranty |
+|---|---|---|
+| Gulf | Yes | Yes |
+| Turkey | Yes | Yes |
+| India | No (IRDAI) | Yes |
+
+The warranty form for wind uses the same SC formula as rain:
+
+```
+SC = (|FA − AV| − VT) × WA,  capped at SC_max
+```
+
+Where `FA` is CH's Forecasted wind-days (above threshold) and `AV` is the certified actual count.
+
+---
+
+## API
+
+```bash
+POST /api/wind/quote
+```
+
+Key parameters: `site`, `strikeDays`, `capDays`, `burnPerDay`, `threshold` (m/s), `height` (m), `form` (`derivative` or `warranty`).
+
+See [Wind Quote](/api/wind) for full schema.
