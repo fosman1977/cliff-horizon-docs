@@ -1,0 +1,93 @@
+---
+title: "India — Warranty"
+description: "Warranty form, Ashoka Buildcon / Bankot Creek bridge. IMERG settlement. Service credit formula. Open VT=FA issue."
+---
+
+India is CH's **warranty geography**. The OTC parametric derivative form is blocked by IRDAI (Insurance Regulatory and Development Authority of India), which classifies contracts that pay on weather events as insurance requiring a licence. The forecast-accuracy warranty sidesteps this: it is a service-level agreement on CH's own forecast quality, not a contract to pay on weather occurrence.
+
+---
+
+## Live client: Ashoka Buildcon / Bankot Creek
+
+Ashoka Buildcon is a large Indian infrastructure and construction company. The live warranty covers their **Bankot Creek bridge** project on the Maharashtra coast.
+
+| Parameter | Value |
+|---|---|
+| Site | Bankot Creek, Maharashtra (~17.94°N, 73.27°E) |
+| Settlement source | GPM IMERG Late V07B |
+| Rain day definition | Daily accumulation > 5mm |
+| Product form | Forecast-accuracy warranty |
+| Status | Signed and paying |
+
+This is CH's **first revenue-generating client**. The deal validates that:
+
+1. Indian construction companies will engage with parametric-style weather coverage
+2. The warranty form is legally clean under IRDAI
+3. GPM IMERG Late V07B is an acceptable settlement source for an Indian buyer
+
+---
+
+## Service credit formula
+
+```
+SC = (|FA − AV| − VT) × WA,  capped at SC_max
+```
+
+| Term | Definition |
+|---|---|
+| `FA` | Forecasted Accumulation — CH's published forward estimate for the period |
+| `AV` | Actual Value — settled from GPM IMERG Late V07B |
+| `VT` | Variance Threshold — the contractual tolerance band |
+| `WA` | Weighted Amount per unit of overshoot |
+| `SC_max` | Maximum service credit per period (cap) |
+
+**How it triggers:** If CH's forecast for rain-days in a period overshoots the actual by more than VT, the buyer receives SC per unit of overshoot. If CH undershoots by more than VT, the same formula applies (CH was too pessimistic).
+
+**How it differs from the derivative:** The contract is not "pay if it rains". The contract is "pay if CH's forecast was wrong by more than VT". The buyer has a claim against CH's forecast quality, not against the weather.
+
+---
+
+## Open issue: VT = FA (hair-trigger in dry months)
+
+The current Annexure-E of the Ashoka MSA sets `VT = FA`. This has an unintended consequence in low-rain months:
+
+- If CH forecasts FA = 2mm for a dry month and the actual is 0mm, then `|FA − AV| = 2mm` and `VT = FA = 2mm` → no trigger.
+- But if CH forecasts FA = 0.5mm and actual is 0mm, then `|FA − AV| = 0.5mm` and `VT = FA = 0.5mm` → no trigger.
+- The issue arises when FA is near-zero: any small forecast error triggers the warranty even if the error is within any reasonable tolerance.
+
+This is a structural hair-trigger in dry months. The next SOW will separate VT from FA:
+- Option A: Set VT as a fixed floor (e.g. VT = max(FA, 3mm))
+- Option B: Use a seasonally-adjusted VT that tracks climatological variance
+- Option C: Restrict the warranty to the monsoon season (June–September) only
+
+<Note>
+Until the VT=FA issue is resolved in the next SOW, buyers should be briefed that the warranty behaves differently in dry months than in monsoon months. The current Ashoka/Bankot deal is monitored for anomalous dry-month triggers.
+</Note>
+
+---
+
+## Settlement: GPM IMERG Late V07B
+
+GPM IMERG (Integrated Multi-satellitE Retrievals for GPM) Late Run V07B is the settlement standard for Indian warranty contracts. Key characteristics:
+
+| Property | Value |
+|---|---|
+| Spatial resolution | 0.1° × 0.1° (~11km) |
+| Temporal resolution | 30-minute to daily |
+| Latency | ~12–14 hours (Late Run) |
+| Coverage | Global 60°N–60°S |
+| Provider | NASA / JAXA |
+
+The Late Run is used (not the Final Run) because it is available within 14 hours of the end of the period, which allows timely settlement. The Final Run (with gauge adjustment) becomes available after ~3.5 months and can be used for dispute resolution if needed.
+
+---
+
+## India flood warranty — parked
+
+A flood warranty product for India (river flooding, not pluvial) was assessed. It was parked due to lack of demand pull — Indian infrastructure operators have not expressed interest in flood cover through the CH channel. This is distinct from the rain/work-stop warranty, which has an active client.
+
+---
+
+## Wind warranty (India)
+
+Wind warranty is available for the Coimbatore wind-farm corridor. See [Wind](/perils/wind) for details. The derivative form is blocked by IRDAI; the warranty form is clean.
