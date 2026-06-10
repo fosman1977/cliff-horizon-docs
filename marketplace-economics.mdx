@@ -1,0 +1,79 @@
+---
+title: "Marketplace Economics"
+description: "Why trades clear — heterogeneous risk preferences, breadth as diversification engine, and the residual constraint."
+---
+
+Risk transfer is positive-sum when the same risk is worth different amounts to the two sides of the trade. That is the entire economics of CH in one sentence.
+
+---
+
+## Why the buyer pays
+
+A commercial operator — a construction company, a logistics provider, an infrastructure developer — holds weather risk that is:
+
+- **Concentrated:** They have one project, one season, one geography.
+- **Correlated with survival:** A 30-day rain shutdown at the wrong moment is an event that threatens covenant compliance, triggers liquidated damages, or kills the IRR on a single-asset deal.
+- **Invisible to their lenders:** Standard project finance treats weather as force majeure. It sits off the risk register. No one is pricing it in.
+
+For this buyer, the tail that CH prices at expected-loss + 35% load looks cheap. They are paying to remove an event that could kill the business, using money they would otherwise allocate to contingency reserves that earn nothing.
+
+---
+
+## Why capital takes the other side
+
+Capital (Ensuro's pool, or a reinsurance counterparty) holds weather risk that is:
+
+- **Diversified:** One CH line is one small position in a book of uncorrelated parametric risks across geographies and perils.
+- **Short duration and transparent:** The index is certified, the settlement source is public, there is no litigation risk.
+- **Priced above actuarial fair value:** The load (currently 35% above expected loss) is the capital cost for holding the risk. It is not profit — it is the return required to deploy capital into an illiquid market.
+
+Both sides gain. The price band exists because the buyer values the cover above expected-loss + load, and capital requires expected-loss + load but no more than that. The deal clears in the overlap.
+
+---
+
+## Breadth as the diversification engine
+
+This is the structural moat. Each new uncorrelated peril/geography line that CH adds to the marketplace:
+
+1. Reduces the correlation of Ensuro's book → lowers the portfolio VaR per unit of premium.
+2. Makes capital more willing to take each individual line at the same load → buyer costs don't rise as the book scales.
+3. Attracts new capital that wants parametric exposure but can't build the origination and index infrastructure itself.
+
+The network effect runs in both directions: more buyer relationships → more lines → lower capital cost → cheaper cover → more buyer relationships.
+
+---
+
+## Forward-climate pricing as counterparty recruiter
+
+A standard parametric contract written at historical rates is mispriced on any peril that has a trend component. Rainfall extremes in Gulf cities are trending (CC intensification ~7%/°C, supported by the WWA 2024 Dubai attribution study). History-based pricing applied to a 5-year contract is structurally underpriced.
+
+CH prices on forward distributions (QDM bias-corrected, CMIP6 ensemble). This does two things:
+
+1. Makes CH a better counterparty for capital — the premium accurately covers future expected loss.
+2. Differentiates CH from brokers writing vanilla parametrics off a 20-year historical average.
+
+Calibrated forward pricing is necessary but not sufficient for the moat. It becomes a moat when combined with breadth and network.
+
+---
+
+## Assumption A — the residual constraint
+
+Everything above is the theoretical case for why trades should clear. The empirical question is whether real mid-market commercial buyers, in practice, will pay for OTC parametric cover and accept basis risk (the gap between the index and their actual loss).
+
+**Assumption A:** They will.
+
+This has not been proven at scale. The cheapest test is direct buyer conversations at the Turkey prospect locations. Until Assumption A is validated with signed term sheets, all the economics above is a model, not a market.
+
+<Note>
+The Turkey funnel exists to test Assumption A at minimum cost. Everything else — calibration improvements, new perils, new geographies — is behind this gate.
+</Note>
+
+---
+
+## Failure modes to watch
+
+| Failure mode | Signal | Guard |
+|---|---|---|
+| Basis risk rejection | Buyers walk when they learn the index ≠ their loss | Disclose basis in money upfront; let it be their decision |
+| Load rejection | Buyers want cover at actuarial fair value | Educate on capital economics; compare to reserve cost |
+| Concentration of capital | Ensuro is the only capital pool | Breadth strategy recruits additional capital |
