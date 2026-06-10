@@ -1,0 +1,118 @@
+---
+title: "Flood Quote"
+description: "POST /api/flood/quote — GEV extreme-precip flood derivative."
+---
+
+The flood quote endpoint prices a **flood derivative** based on GEV-fitted extreme precipitation. It is self-contained and separate from the rain/work-stop router — do not generalise between the two.
+
+---
+
+## POST /api/flood/quote
+
+```
+POST http://localhost:8001/api/flood/quote
+Content-Type: application/json
+```
+
+---
+
+## Request schema
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `site` | string | Yes | — | Site ID (must be a flood-enabled site) |
+| `floodLine` | number | Yes | — | Attachment point in mm/day |
+| `capDays` | integer | Yes | — | Maximum trigger days counted for payout |
+| `burnPerDay` | number | Yes | — | Operator's cost per day of flood downtime |
+| `load` | number | No | 0.35 | Capital load above expected loss |
+| `source` | string | No | `"ERA5"` | Data source: `"ERA5"` or `"NASA"` |
+
+---
+
+## Response schema
+
+| Field | Type | Description |
+|---|---|---|
+| `premium` | number | Point estimate premium |
+| `premium_band` | [number, number] | 90% credible interval |
+| `expected_days` | number | Expected trigger days per contract period |
+| `return_period` | number | Return period in years at the flood-line |
+| `gev_params` | object | Fitted GEV parameters (mu, sigma, k) |
+| `basis` | object | ERA5 vs NASA basis at the flood-line |
+| `provenance` | object | Hash, method, generated timestamp |
+
+### gev_params object
+
+```json
+{
+  "mu": 18.4,
+  "sigma": 9.1,
+  "k": -0.24,
+  "method": "L-moments",
+  "calibration_period": "1979-2023"
+}
+```
+
+---
+
+## Example: Dubai 50mm flood-line
+
+```bash
+curl -X POST http://localhost:8001/api/flood/quote \
+  -H "Content-Type: application/json" \
+  -d '{
+    "site": "dubai_ae",
+    "floodLine": 50,
+    "capDays": 30,
+    "burnPerDay": 3000000,
+    "load": 0.35,
+    "source": "ERA5"
+  }'
+```
+
+Example response:
+
+```json
+{
+  "premium": 6400000,
+  "premium_band": [5900000, 7600000],
+  "expected_days": 0.16,
+  "return_period": 22,
+  "gev_params": {
+    "mu": 18.4,
+    "sigma": 9.1,
+    "k": -0.24,
+    "method": "L-moments",
+    "calibration_period": "1979-2023"
+  },
+  "basis": {
+    "factor": 0.53,
+    "source_pair": ["ERA5", "NASA POWER"],
+    "note": "Apr-2024: ERA5=100mm, NASA=53mm — buyer's acknowledged basis"
+  },
+  "provenance": {
+    "hash": "sha256:b7e2f4...",
+    "method": "GEV_Lmom_CCloaded",
+    "generated": "2026-06-10T09:00:00Z"
+  }
+}
+```
+
+---
+
+## Flood-enabled sites
+
+Sites must be explicitly configured as flood-enabled. Use `/api/sites` to check the `peril` field — flood sites have `"peril": "flood"`.
+
+Current flood sites:
+- `dubai_ae` — Dubai, UAE
+- `istanbul_tr` — İstanbul, Turkey
+- `bartin_tr` — Bartın, Turkey
+- `kastamonu_tr` — Kastamonu, Turkey
+- `sinop_tr` — Sinop, Turkey
+
+---
+
+## Forward-climate loading
+
+The GEV parameters are forward-loaded using CC intensification. The `gev_params` in the response reflect the forward-calibrated parameters used for pricing, not the raw historical fit. The raw historical GEV is available for comparison in the provenance metadata.
