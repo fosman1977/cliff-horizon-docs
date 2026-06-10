@@ -1,0 +1,115 @@
+---
+title: "Proof & Track"
+description: "GET /api/proof/{site_id} and GET /api/track/{site_id} — calibration verification and rolling audit."
+---
+
+These two endpoints are the calibration honesty layer. `/api/proof` shows whether the probability estimates are reliable. `/api/track` shows the running tally of predicted vs observed outcomes in real time.
+
+---
+
+## GET /api/proof/{site_id}
+
+```
+GET http://localhost:8001/api/proof/rize_tr
+```
+
+Returns the **out-of-sample calibration diagnostics** for the site's probability forecasts.
+
+### What it returns
+
+| Field | Type | Description |
+|---|---|---|
+| `crps` | number | Continuous Ranked Probability Score (lower = better) |
+| `ece` | number | Expected Calibration Error (lower = better, 0 = perfect) |
+| `ece_ci` | [number, number] | Bootstrap 90% CI for ECE |
+| `brier` | number | Brier score for the primary trigger probability |
+| `brier_decomp` | object | Resolution + reliability + uncertainty decomposition |
+| `reliability_diagram` | array | Bin-level forecast probability vs observed frequency |
+| `pit_histogram` | array | PIT/rank histogram bins (flat = calibrated) |
+| `calibration_period` | string | e.g. `"1991-2014"` |
+| `validation_period` | string | e.g. `"2015-2024"` |
+
+### Interpreting the reliability diagram
+
+The reliability diagram plots **forecast probability** on the x-axis against **observed frequency** on the y-axis. A perfectly calibrated model falls on the 45° diagonal. Points below the diagonal = overconfident (model says 80%, reality is 60%). Points above = underconfident.
+
+### Interpreting ECE
+
+ECE is the weighted average of |forecast_prob − observed_freq| across probability bins. A value below 0.03 is generally acceptable for parametric pricing. The bootstrap CI tells you whether an observed ECE improvement is statistically significant.
+
+### Interpreting the PIT histogram
+
+For a continuous forecast, the probability integral transform (PIT) should be uniform if the model is calibrated. Right-skew = wet-tail under-dispersion (model doesn't spread the upper tail enough). This was the M0 diagnosis for the India sites.
+
+### Example response excerpt
+
+```json
+{
+  "crps": 1.649,
+  "ece": 0.025,
+  "ece_ci": [0.018, 0.033],
+  "calibration_period": "1991-2014",
+  "validation_period": "2015-2024",
+  "reliability_diagram": [
+    { "bin_centre": 0.1, "forecast_prob": 0.10, "observed_freq": 0.09, "n": 142 },
+    { "bin_centre": 0.3, "forecast_prob": 0.30, "observed_freq": 0.31, "n": 87 },
+    ...
+  ]
+}
+```
+
+---
+
+## GET /api/track/{site_id}
+
+```
+GET http://localhost:8001/api/track/rize_tr
+```
+
+Returns the **rolling predicted-vs-observed audit** for the current contract season, plus the append-only ledger of settled windows.
+
+### What it returns
+
+| Field | Type | Description |
+|---|---|---|
+| `current_season` | object | Cumulative rain-days to date vs predictive cone |
+| `predictive_cone` | object | 10th–90th percentile band (monsoon-shaped, basis-mapped ERA5→IMD) |
+| `in_flight` | boolean | Whether the current observation period is still open |
+| `settled_ledger` | array | Append-only list of settled contract windows |
+
+### current_season object
+
+```json
+{
+  "date": "2026-06-10",
+  "cumulative_actual": 14,
+  "cumulative_predicted_p50": 12,
+  "cone_p10": 8,
+  "cone_p90": 18,
+  "days_remaining": 47
+}
+```
+
+### settled_ledger entry
+
+```json
+{
+  "window_id": "rize_tr_2025_JJA",
+  "period": "2025-06-01/2025-08-31",
+  "forecast_days": 43,
+  "actual_days": 51,
+  "settled": "2025-09-05",
+  "source": "ERA5",
+  "payout_triggered": true
+}
+```
+
+### Interpretation
+
+The track view answers the question: "Is CH's model tracking reality this season?" The predictive cone is calibrated from the out-of-sample validation period. If the actual cumulative count is consistently outside the cone, that is a signal to review the calibration.
+
+The `in_flight` flag marks windows where the observation period is still open. Settled windows are immutable once the source publishes its final values.
+
+<Note>
+The Track endpoint is the "race to the strike" view. It is designed for transparency with buyers — they can see the live running tally against the cone at any time during the contract period.
+</Note>
