@@ -1,0 +1,72 @@
+---
+title: "Solar / Irradiance"
+description: "Why solar is a menu-line, not a wedge. Available on client request only."
+---
+
+Solar irradiance is available as a **warranty menu-line** on client request. It is not a launch wedge. This page explains why, and under what conditions it makes sense to serve a solar client.
+
+---
+
+## Why solar is not a wedge
+
+The thesis requires a peril that creates meaningful economic risk for the "missing middle" buyer — an operator with concentrated exposure to a tail that capital can diversify. Solar fails this test at every timescale:
+
+**Interannual stability:**
+- Interannual coefficient of variation (CV) for GHI at Turkey and India sites: **2–6%**
+- A solar farm with 5% revenue variance year-on-year does not have a tail problem. It has a budgeting problem.
+
+**Monthly resolution is also thin:**
+- At the 80%-trigger level used by InRisk Labs (the incumbent in this lane), the trigger fires in approximately **1/480 months** at the contract gridpoint
+- This is not a product for the "missing middle" — it is a niche guarantee for project finance lenders
+
+**The buyer's actual problem is financeability, not variance:**
+- The buyers who purchase solar irradiance cover are doing so to satisfy lenders, not to protect against operational risk they feel
+- The product being sold in the market (Marsh, Swiss Re, Arbol, InRisk, Tongwei) is a financeability/output-guarantee, not a variance hedge
+- InRisk Labs already occupies this lane with a product tuned for Indian solar project finance
+
+**Solar cannibalisation is structural:**
+- High-irradiance days are also high-generation days for every solar farm simultaneously
+- This creates a systematic power price depression on the days that should produce the most revenue
+- This is not basis risk CH can solve — it is a structural feature of the market
+
+---
+
+## InRisk overlap
+
+InRisk Labs offers a solar warranty product in India targeted at the same gridpoints and buyer profile. Competing directly on this lane means:
+
+- Matching InRisk's existing product without differentiation
+- Serving a buyer whose actual problem (lender covenants) is not well-served by a parametric index
+
+This is a settled decision. Solar is killed as a CH wedge.
+
+---
+
+## When solar makes sense (menu-line)
+
+Despite the above, CH will serve a solar client if:
+
+1. The client specifically requests irradiance cover as part of a broader CH relationship
+2. The exposure is bundled with rain, wind, or flood cover on the same site
+3. The buyer is a CH warranty client already (India) and adds solar as a secondary line
+
+In this case, CH uses ERA5 SSRD (surface solar radiation downwards) + NASA POWER GHI as the two-source index, with the same QDM forward calibration applied to other perils.
+
+---
+
+## Available sites (menu-line)
+
+| Site | Country | Index | Form |
+|---|---|---|---|
+| Konya / Karapınar (1.35 GW YEKA) | Turkey | ERA5 SSRD + NASA POWER GHI | Warranty |
+| Şanlıurfa | Turkey | ERA5 SSRD + NASA POWER GHI | Warranty |
+| Kayseri | Turkey | ERA5 SSRD + NASA POWER GHI | Warranty |
+| India (various) | India | ERA5 SSRD + NASA POWER GHI | Warranty |
+
+```bash
+GET /api/irradiance/quote?site=konya_tr&threshold=...
+```
+
+<Note>
+Solar is available only on explicit client request. Do not lead with solar in buyer conversations. Lead with rain/flood/wind.
+</Note>
