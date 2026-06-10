@@ -1,29 +1,75 @@
 ---
-title: Introduction
-description: "Starter project with example pages, components, and auto-deploy from GitHub. Edit MDX files, customize your theme, and go live in minutes."
+title: "What is Cliff Horizon"
+description: "The underwriting brain of an OTC parametric weather-derivatives marketplace."
 ---
 
-Welcome to your documentation site. This starter project has everything you need to get up and running.
+Cliff Horizon is a **certified-index + forward-climate calibrated-pricing + structuring engine** for OTC parametric weather derivatives. It is not an insurer and not a data vendor. It is the pricing and structuring brain that sits between commercial buyers with concentrated weather risk and capital that needs diversified, uncorrelated lines.
 
-## What's included
+**Ensuro** provides the capital and regulatory wrapper. CH is the non-principal index and calculation agent — market enabler, not market maker. Neutrality is the moat.
+
+<Note>
+**Assumption A — the current gate:** Mid-market commercial buyers will pay for OTC parametric cover and accept basis risk. Everything else blocks on this. The cheapest test is 3–5 buyer conversations at Turkey prospect locations using the demo funnel.
+</Note>
+
+---
+
+## Two product forms on one index core
 
 <Columns cols={2}>
-  <Card title="Ready-made pages" icon="file-lines">
-    Example pages showing how to structure your docs with headings, lists, and components.
+  <Card title="OTC Derivative" icon="trending-up" href="/product-forms">
+    Pays a commercial operator for event-driven downtime on a certified weather index. No proof of loss. Ensuro is the capital wrapper. Launch geography: Gulf / Dubai.
   </Card>
-  <Card title="Component examples" icon="puzzle-piece">
-    Cards, callouts, tabs, steps, and more — all ready to use.
-  </Card>
-  <Card title="Auto-deploy" icon="rocket">
-    Push to GitHub and your docs build and deploy automatically.
-  </Card>
-  <Card title="Customizable" icon="palette">
-    Change colors, logo, navigation, and theme in `docs.json`.
+  <Card title="Forecast-Accuracy Warranty" icon="shield-check" href="/product-forms">
+    CH warrants the accuracy of its own Forecasted Value. Trigger is *CH being wrong*, not a weather level. Sidesteps IRDAI — India transactable now. Live client: Ashoka Buildcon / Bankot Creek.
   </Card>
 </Columns>
 
-## Next steps
+Both forms run on the same calibrated index core. The form is a legal and regulatory packaging choice, not a different model.
 
-<Card title="Quickstart" icon="play" href="/quickstart">
-  Learn how to edit pages, customize your site, and deploy changes.
-</Card>
+---
+
+## The moat
+
+The moat is **forward-climate pricing × breadth × network** — not the index, not historical calibration, not forecasting.
+
+| Moat layer | What it means |
+|---|---|
+| **Forward-climate pricing** | History-based pricing is insolvent on trending perils. CH prices on forward distributions (QDM + CMIP6), which is the only defensible method for a 5–10 year contract horizon. |
+| **Breadth** | Each new uncorrelated peril/geography line makes capital's book more efficient. Capital follows breadth. Breadth creates a network of capital that can take each new line. |
+| **Network** | Buyer relationships + capital relationships compound. Neither side talks to each other without a trusted intermediary. |
+
+**What is not the moat:** data access (ERA5/NASA/IMERG are free), the index formula (simple and auditable by design), forecasting skill (no edge on public data — settled).
+
+---
+
+## Active perils
+
+| Peril | Forms | Geographies |
+|---|---|---|
+| Extreme rainfall → construction work-stop | Derivative + warranty | Turkey (6 sites), India (Ashoka/Bankot) |
+| Extreme rainfall → pluvial/flash flood | Derivative | Dubai/Gulf, Turkey İstanbul |
+| Wind (Shamal, Lodos/Meltemi, wind-farm) | Derivative + warranty | Gulf, Turkey, India Coimbatore |
+| Solar / irradiance | Warranty menu-line only | Turkey, India |
+
+<Tip>
+Solar is a **menu-line, not a wedge**. It is too stable at every timescale (interannual CV 2–6%) to serve the "missing middle" buyer. Available only on client request.
+</Tip>
+
+---
+
+## Where to go next
+
+<Columns cols={2}>
+  <Card title="Product Forms" icon="layers" href="/product-forms">
+    Derivative vs warranty — how each works, when to use each, Ensuro role.
+  </Card>
+  <Card title="Quickstart" icon="zap" href="/quickstart">
+    Run the engine locally in under 5 minutes.
+  </Card>
+  <Card title="Turkey — first prospect geography" icon="map-pin" href="/geographies/turkey">
+    13 sites, ERA5 settlement, year-round wet Eastern Black Sea sites.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/overview">
+    All endpoints — quote, flood, wind, proof, track.
+  </Card>
+</Columns>
