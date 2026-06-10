@@ -1,0 +1,77 @@
+---
+title: "Product Forms"
+description: "OTC derivative and forecast-accuracy warranty — two legal wrappers on one index core."
+---
+
+The Cliff Horizon engine produces two distinct product forms. The index calculation, data sources, and calibration are identical. The difference is purely in the legal trigger and the regulatory positioning.
+
+---
+
+## Form 1: OTC Parametric Derivative
+
+**Trigger:** The certified weather index crosses a contractually-specified level.
+
+**How it pays:**
+
+```
+Payout = min(capDays, max(0, eventDays − strikeDays)) × burnPerDay
+```
+
+Where `eventDays` is the count of index days above the threshold in the contract period. No proof of loss is required. The buyer receives payment automatically when the index settles.
+
+**Roles:**
+- **CH** — index calculation agent and pricing brain. Non-principal. Does not hold risk.
+- **Ensuro** — capital wrapper and counterparty. Holds all risk on its balance sheet.
+
+**When to use it:** For commercial operators with event-driven downtime costs that are well-correlated with a weather index. Construction, logistics, outdoor events, infrastructure maintenance. Launch geographies: Gulf/Dubai, Turkey.
+
+**Settlement:** On the contract end date, CH publishes the certified settlement value derived from the disclosed data source (ERA5, NASA POWER, or GPM IMERG depending on site). Ensuro pays within the agreed window.
+
+---
+
+## Form 2: Forecast-Accuracy Warranty
+
+**Trigger:** CH's own Forecasted Value diverges from the Actual Value by more than the Variance Threshold.
+
+**Service credit formula:**
+
+```
+SC = (|FA − AV| − VT) × WA,  capped at SC_max
+```
+
+Where:
+- `FA` = Forecasted Accumulation (CH's forward estimate, published before the period)
+- `AV` = Actual Value (settled from the disclosed source, e.g. GPM IMERG Late V07B)
+- `VT` = Variance Threshold (the contractual tolerance band)
+- `WA` = Weighted Amount per unit of overshoot
+
+**How this differs from the derivative:** The trigger is *CH being wrong*, not the world crossing a rain level. The buyer's claim is against CH's forecast quality, not against weather occurrence.
+
+**Why this matters for India:** IRDAI classifies contracts that pay on weather events as insurance, requiring a licence CH does not hold. A warranty on forecast accuracy is a service-level agreement — no IRDAI licence required. This makes India transactable now.
+
+**Live example:** Ashoka Buildcon / Bankot Creek bridge. Settles on GPM IMERG Late V07B. Rain day = threshold >5mm.
+
+**Ensuro's role:** Under MSA §8.10, Ensuro holds the risk in a 1:1 lay-off arrangement. CH remains a non-principal calculation agent in both forms.
+
+---
+
+## Open issue: VT = FA (hair-trigger)
+
+The current Ashoka Annexure-E sets VT equal to FA in low-rain months. This means the warranty triggers any time the actual falls below zero rain when the forecast was also near zero — a structural hair-trigger in dry months. The next SOW will separate VT from FA, giving VT a fixed floor or a seasonally-adjusted band.
+
+<Note>
+Until this is resolved, the warranty product behaves differently in dry months than in monsoon months. Buyers should be briefed on this characteristic.
+</Note>
+
+---
+
+## Choosing between forms
+
+| | OTC Derivative | Warranty |
+|---|---|---|
+| Trigger | Index crosses level | CH forecast diverges from actuals |
+| Proof of loss required | No | No |
+| India transactable | No (IRDAI) | Yes |
+| Best for | Event-driven downtime | Forecast-dependent operations |
+| Capital holder | Ensuro | Ensuro |
+| CH role | Index/calc agent | Index/calc + forecast agent |
