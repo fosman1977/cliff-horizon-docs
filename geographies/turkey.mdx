@@ -1,0 +1,90 @@
+---
+title: "Turkey"
+description: "13 sites, first prospect geography. ERA5+NASA settlement, Eastern Black Sea rain, İstanbul flood, solar YEKA."
+---
+
+Turkey is CH's **first prospect geography** — the location where Assumption A will be tested with real buyer conversations. 13 sites are live across rain, flood, and solar perils. There is no IMD-equivalent national gauge in Turkey, so all sites settle on ERA5 + NASA POWER cross-check with the basis disclosed in money.
+
+---
+
+## Why Turkey first
+
+- **No single build season:** Construction work continues year-round, especially on the Eastern Black Sea coast. Rain risk is not seasonal — it is a year-round operational constraint.
+- **Real events:** The August 2021 İstanbul flash flood (~97 deaths, ~$300M economic loss) and repeated Eastern Black Sea flooding (Artvin, Rize, Giresun) demonstrate that the tail events are real and recent.
+- **Active construction pipeline:** Large infrastructure projects (roads, bridges, YEKA solar farms) create buyer candidates with concentrated weather exposure.
+- **ERA5 settlement is credible:** In the absence of a nationally-trusted gauge (like India's IMD), ERA5 + NASA POWER cross-check is a reasonable settlement standard that buyers can verify independently.
+
+---
+
+## Site table
+
+| Site ID | Location | Peril | Settlement | Notes |
+|---|---|---|---|---|
+| `rize_tr` | Rize | Rain/work-stop | ERA5 + NASA | ~67 work-stop days/yr at 10mm threshold |
+| `trabzon_tr` | Trabzon | Rain/work-stop | ERA5 + NASA | Eastern Black Sea, year-round wet |
+| `artvin_tr` | Artvin | Rain/work-stop | ERA5 + NASA | Flash flood history; inland terrain |
+| `ordu_tr` | Ordu | Rain/work-stop | ERA5 + NASA | Eastern Black Sea belt |
+| `giresun_tr` | Giresun | Rain/work-stop | ERA5 + NASA | Eastern Black Sea belt |
+| `antalya_tr` | Antalya | Rain/work-stop | ERA5 + NASA | Mediterranean; seasonal summer dry |
+| `bartin_tr` | Bartın | Flood | ERA5 + NASA | Western Black Sea; 2021 flash flood event |
+| `kastamonu_tr` | Kastamonu | Flood | ERA5 + NASA | Western Black Sea; 2021 flood corridor |
+| `sinop_tr` | Sinop | Flood | ERA5 + NASA | Western Black Sea coast |
+| `istanbul_tr` | İstanbul | Flood | ERA5 + NASA | Urban flash flood; Aug-2021 >300mm/24h |
+| `konya_tr` | Konya / Karapınar | Solar | ERA5 + NASA | 1.35 GW YEKA solar farm |
+| `sanliurfa_tr` | Şanlıurfa | Solar | ERA5 + NASA | Southeast; high irradiance |
+| `kayseri_tr` | Kayseri | Solar | ERA5 + NASA | Central Anatolia |
+
+---
+
+## Eastern Black Sea rain sites
+
+The five Eastern Black Sea sites (Rize, Trabzon, Artvin, Ordu, Giresun) are the strongest demonstration of the rain/work-stop product:
+
+**Rize** is the most extreme example:
+- Annual rainfall ~2,200mm
+- Expected work-stop days at 10mm threshold: **~67 per year**
+- A construction project with a 100-day window at Rize faces an expected 67 days of rain interruption — an existential schedule risk without cover
+
+At these sites, the premium for a typical construction window is material and the buyer's alternative (bare contingency reserve) is expensive and illiquid.
+
+---
+
+## İstanbul August 2021 flood event
+
+The August 2021 İstanbul flood is the anchor event for the flood peril in Turkey:
+
+- >300mm of rainfall in 24 hours in parts of İstanbul
+- ~97 deaths, approximately $300M in reported economic damage
+- Affected the D-100 highway, metro tunnels, and multiple construction sites simultaneously
+
+CH GEV fit for İstanbul places this event in the rare-but-plausible tail — not a 1-in-1000-year event, but a 1-in-30 to 1-in-100 depending on the specific gridpoint and source. This is within the insurable range.
+
+---
+
+## Solar sites (YEKA)
+
+The three Turkish solar sites are **menu-line only** — not a wedge. The 1.35 GW Karapınar YEKA solar farm in Konya is the largest solar project in Turkey and the most likely candidate for a warranty inquiry from a project finance lender.
+
+See [Solar / Irradiance](/perils/solar) for why solar is not a launch wedge.
+
+---
+
+## ERA5 ↔ NASA basis disclosure policy
+
+Every Turkey quote discloses:
+
+1. The two settlement sources (ERA5 and NASA POWER)
+2. The basis between them expressed in equivalent downtime-days × burnPerDay
+3. A QC flag if the basis exceeds a site-specific threshold
+
+Wide-basis sites are flagged in the QC sweep (`/api/qc`). Buyers are briefed that the settled value will be from the designated primary source, and the cross-check source is disclosed as an independent reference.
+
+---
+
+## Forms available by site type
+
+| Site type | Derivative | Warranty |
+|---|---|---|
+| Rain (Eastern Black Sea, Antalya) | Yes | Yes |
+| Flood (Western Black Sea, İstanbul) | Yes | No |
+| Solar (YEKA, Şanlıurfa, Kayseri) | No | Yes (menu-line) |
