@@ -1,0 +1,82 @@
+---
+title: "Flood — Extreme Rainfall"
+description: "Extreme-precipitation pluvial/flash flood peril. GEV tail model, two-source cross-check, derivative-only form."
+---
+
+The flood peril covers commercial operators against **extreme single-day precipitation events** that cause operational downtime through flooding. It is distinct from the rain/work-stop peril: this is not about accumulated wet days but about individual extreme events with nonlinear economic consequences.
+
+---
+
+## Why the GEV model, not Gumbel
+
+Extreme precipitation tails have negative shape parameters (k < 0 in GEV notation). This means the distribution has a **heavier tail than the Gumbel** — extreme events are more likely than a Gumbel fit would predict.
+
+CH fits a **GEV (Generalised Extreme Value)** distribution to annual maxima:
+
+```
+GEV(x; μ, σ, k)  with k ≈ −0.2 to −0.3 for Gulf/Turkey sites
+```
+
+Using Gumbel (which forces k = 0) would systematically understate the probability of events like Dubai April 2024. The GEV fit — calibrated with L-moments for robustness to outliers — correctly captures the heavy tail.
+
+**Forward-climate loading:** The CC intensification signal (~7%/°C following Clausius-Clapeyron, corroborated by the WWA 2024 Dubai attribution study) is applied to the GEV parameters. This is where the moat is strongest: most market participants are pricing flood from historical GEV with no CC loading.
+
+---
+
+## Two-source cross-check
+
+Every flood quote discloses both data sources and their basis:
+
+| Source | Coverage | Notes |
+|---|---|---|
+| NASA POWER | Global, ~0.5° | Free, GPM-family |
+| ERA5 / Open-Meteo | Global, ~31km | Free, ECMWF reanalysis |
+
+For the Dubai April 2024 event, NASA POWER recorded **53mm** and ERA5/Open-Meteo recorded **100mm** for the same 24-hour period. Both are disclosed. The settlement source is specified in the contract — the basis is the buyer's acknowledged risk.
+
+<Note>
+Reanalysis is a floor, not a ceiling. Station observations (where available) and satellite products consistently show higher peak intensities than reanalysis gridded products. CH treats this as a conservative bias in the index.
+</Note>
+
+---
+
+## Flood-line as attachment point
+
+The flood-line (attachment point) is the precipitation threshold that triggers the downtime payout:
+
+```
+Payout = min(capDays, max(0, eventDays_above_flood_line)) × burnPerDay
+```
+
+The flood-line is a pricing dial. Key reference points for Dubai:
+
+| Flood-line | Return period (historical) | Premium (AED m, 30d cap, AED 3m/day) |
+|---|---|---|
+| 25mm | ~1-in-4 years | Higher |
+| 50mm | ~1-in-13 to 1-in-34 years | Sweet spot (AED 5.9–7.6m) |
+| 70mm | ~1-in-34 years | Lower |
+| 100mm | ~1-in-45 to 1-in-130 years | Catastrophe layer |
+
+The **sweet spot** for buyer economics is the 50–70mm range: frequent enough to be credible, rare enough for capital to price it below the buyer's pain threshold.
+
+---
+
+## Derivative-only form
+
+The flood peril is currently **derivative only**. Unlike rain/work-stop, there is no forecast-accuracy warranty form for flood because:
+
+1. The trigger is a single-day extreme event, not an accumulation that can be forecast in advance.
+2. The operational relevance for warranty buyers (who need to act on the forecast) is lower.
+
+Ensuro is the capital wrapper in all cases.
+
+---
+
+## Return period calibration
+
+| Geography | Event | Return period (CH GEV) | Notes |
+|---|---|---|---|
+| Dubai | >25mm/24h (disruptive) | ~1-in-2 to 1-in-9 years | Operational disruption threshold |
+| Dubai | Apr 2024 (~100mm) | ~1-in-45 to 1-in-130 years | Depends on source |
+| Dubai | Apr 2024 (validated) | GEV k≈−0.2 to −0.3 | JBA EVA 1-in-125 corroborates |
+| Turkey İstanbul | Aug 2021 >300mm/24h | Rare | ~97 dead, ~$300M loss |
