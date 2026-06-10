@@ -1,0 +1,87 @@
+---
+title: "Rain — Construction Work-Stop"
+description: "The core rain/work-stop peril. Index, calibration, settlement, and both product forms."
+---
+
+The rain/work-stop peril is CH's primary launch peril. It covers construction operators, infrastructure developers, and outdoor contractors against days lost to excessive rainfall that halts work.
+
+---
+
+## Index definition
+
+The index is a **count of rain days** in the contract period:
+
+```
+RainDays = count(days where precipitation ≥ threshold mm)
+```
+
+The default threshold is **10mm/day** (a standard construction work-stop threshold), but it is a dial — buyers can negotiate the threshold as part of the contract structure. The quote engine recomputes the full distribution for any threshold value.
+
+Payout is triggered when `RainDays` exceeds the strike level in the contract period.
+
+---
+
+## Forward-climate calibration (QDM)
+
+Historical raw ERA5 data is biased. CH applies **Quantile Delta Mapping (QDM)**, a trend-preserving bias-correction method:
+
+1. Compute the monthly quantile map from ERA5 (1991–2014 calibration period) to the reference truth layer (IMD gauge for India, ERA5+NASA cross-check for Turkey).
+2. Apply the map to the full ERA5 record including the validation period (2015–2024).
+3. Extend to the contract horizon using CMIP6 ensemble projections.
+
+QDM preserves the trend signal — if extreme precipitation is increasing, the forward distribution reflects that. History-based pricing does not.
+
+**Calibration governance:** A change to the calibration method ships only if it lowers out-of-sample CRPS without degrading ECE or PIT. See [Calibration Workstream](/calibration).
+
+---
+
+## Settlement sources
+
+| Geography | Primary | Cross-check | Basis |
+|---|---|---|---|
+| India | GPM IMERG Late V07B | ERA5 | Disclosed per site |
+| Turkey | ERA5 | NASA POWER | Disclosed per site |
+| Gulf | NASA POWER | ERA5/Open-Meteo | Disclosed per site |
+
+The basis (gap between sources) is expressed in money — days × burnPerDay — and disclosed in every quote. Wide-basis sites are flagged with a QC warning.
+
+---
+
+## Product forms supported
+
+Both **derivative** and **warranty** forms are available for rain/work-stop.
+
+**Derivative:** Pays when the certified RainDays index exceeds the strike level. Ensuro is the capital wrapper.
+
+**Warranty:** CH warrants the accuracy of its Forecasted RainDays against the certified Actual. Service credit formula:
+
+```
+SC = (|FA − AV| − VT) × WA,  capped at SC_max
+```
+
+The warranty form is what makes India transactable — it is a service-level agreement, not an insurance contract.
+
+---
+
+## Representative site: Rize, Turkey
+
+Rize is on the Eastern Black Sea coast — one of the wettest locations in Turkey (~2,200mm/year). It is the most extreme example in the Turkey prospect geography.
+
+| Metric | Value |
+|---|---|
+| Expected work-stop days/year at 10mm threshold | ~67 |
+| Settlement source | ERA5 + NASA POWER |
+| Basis (ERA5 vs NASA) | Disclosed per quote |
+| Forms available | Derivative + warranty |
+
+With ~67 work-stop days per year, Rize is near the upper bound of what is insurable — very few construction projects can absorb that loss without coverage. It is also the strongest demonstration of the pricing engine: the tail at Rize is materially different from the tail at Istanbul or Antalya.
+
+---
+
+## ERA5↔IMD basis (India)
+
+For the Ashoka/Bankot site, ERA5 shows systematically higher wet-season accumulation than IMD gauge. This is the M1 calibration challenge. Until the ERA5→IMD re-targeting is resolved, the settlement is IMD gauge and the ERA5 is used only for the forward distribution. The basis is disclosed to the buyer.
+
+<Note>
+The ERA5↔IMD basis at Bankot is a known open item in M1 of the calibration workstream. It does not affect settlement (which is IMD / IMERG), but it affects the accuracy of the forward-climate premium estimate.
+</Note>
